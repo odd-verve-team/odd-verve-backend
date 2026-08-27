@@ -160,3 +160,5 @@ apps/**/__pycache__/
 
 # Config
 config/**/__pycache__/
+
+venv/
