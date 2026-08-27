@@ -149,3 +149,14 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Tests
+tests/__pycache__/
+.pytest_cache/
+
+# Apps
+apps/__pycache__/
+apps/**/__pycache__/
+
+# Config
+config/**/__pycache__/
