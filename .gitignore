@@ -161,4 +161,7 @@ apps/**/__pycache__/
 # Config
 config/**/__pycache__/
 
+# Common
+common/__pycache__/
+
 venv/
