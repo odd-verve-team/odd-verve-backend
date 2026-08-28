@@ -34,4 +34,4 @@ git checkout develop
 
 Гілка **`dev_breus`** має Опис проекту в файлі DEV_STUCTURE.md
 
-**Поточний стан проекту** [стан проекту](Odd Verve.md)
+**Поточний стан проекту** !include Odd Verve.md
