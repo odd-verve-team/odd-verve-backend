@@ -32,4 +32,6 @@ git checkout develop
 
 Для **`back-end`** розробки використовується гілка `dev_breus`
 
-Гілка `dev_breus` має Опис проекту в файлі DEV_STUCTURE.md
+Гілка **`dev_breus`** має Опис проекту в файлі DEV_STUCTURE.md
+
+**Поточний стан проекту** ![стан проекту](Odd Verve.md)
