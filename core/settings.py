@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 from django.conf.global_settings import AUTH_USER_MODEL, MEDIA_ROOT
@@ -39,11 +39,21 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
+    'cloudinary',
     'rest_framework',
     'apps.artworks',
     'apps.users',
 ]
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.getenv("CLOUD_NAME"),
+    'API_KEY': os.getenv("CLOUD_API_KEY"),
+    'API_SECRET': os.getenv("CLOUD_API_SECRET"),
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -120,10 +130,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-MEDIA_ROOT = BASE_DIR / "media"
-
-MEDIA_URL = "/media/"
-
 # Email
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
@@ -134,3 +140,12 @@ MAILERS = {
 }
 
 AUTH_USER_MODEL = "users.User"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
