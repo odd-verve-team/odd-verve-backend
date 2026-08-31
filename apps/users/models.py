@@ -15,7 +15,7 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 
 class User(AbstractUser):
-    avatar_url = models.URLField()
+    avatar_url = models.URLField(null=True, blank=True)
     role = models.CharField(max_length=20, choices=RoleTextChoices.choices)
     application_status = models.CharField(
         max_length=20,
