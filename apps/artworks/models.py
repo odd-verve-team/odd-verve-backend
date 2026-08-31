@@ -37,7 +37,9 @@ class Artwork(models.Model):
     length = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    moderation_status = models.CharField(max_length=30, choices=ModerationStatusTextChoices.choices)
+    moderation_status = models.CharField(
+        max_length=30, choices=ModerationStatusTextChoices.choices
+    )
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)

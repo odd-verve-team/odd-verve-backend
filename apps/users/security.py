@@ -13,4 +13,6 @@ def validate_password_complexity(password: str) -> None | ValidationError:
     if not re.search(r"\d", password):
         raise ValidationError("Password must have at least 1 digit")
     if not re.search(r"[@$!%*?&#]", password):
-        raise ValidationError("Password must have at least 1 special character: @, $, !, %, *, ?, &, #.")
+        raise ValidationError(
+            "Password must have at least 1 special character: @, $, !, %, *, ?, &, #."
+        )
