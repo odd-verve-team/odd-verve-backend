@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.artworks.models import Artwork
+
+
+admin.site.register(Artwork)
