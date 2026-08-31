@@ -38,9 +38,9 @@ class Artwork(models.Model):
     width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
     moderation_status = models.CharField(
-        max_length=30, choices=ModerationStatusTextChoices.choices
+        max_length=30, choices=ModerationStatusTextChoices.choices, default=ModerationStatusTextChoices.PENDING
     )
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
-    image_url = models.URLField()
+    image_url = models.ImageField(upload_to="artworks_images/")
