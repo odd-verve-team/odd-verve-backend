@@ -14,3 +14,11 @@ class ArtworkListSerializer(serializers.ModelSerializer):
         full_name = f"{obj.artist.name} {obj.arist.surname}"
         full_name = full_name.title()
         return f"{obj.artist.username}\n{full_name}"
+
+
+class ArtworkCreateSerializer(serializers.ModelSerializer):
+    image_field = serializers.ImageField(required=True)
+
+    class Meta:
+        model = Artwork
+        fields = "__all__"
