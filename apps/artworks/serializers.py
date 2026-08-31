@@ -13,7 +13,7 @@ class ArtworkListSerializer(serializers.ModelSerializer):
     def get_artist_full_name(self, obj):
         full_name = f"{obj.artist.first_name} {obj.artist.last_name}"
         full_name = full_name.title()
-        return f"{obj.artist.username}\n{full_name}"
+        return f"{obj.artist.username} {full_name}"
 
 
 class ArtworkCreateSerializer(serializers.ModelSerializer):
