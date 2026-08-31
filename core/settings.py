@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "cloudinary_storage",
     "django.contrib.staticfiles",
+    "corsheaders",
     "cloudinary",
     "rest_framework",
     "drf_spectacular",
@@ -60,6 +61,7 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -168,3 +170,7 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
