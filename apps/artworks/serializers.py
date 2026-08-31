@@ -19,7 +19,15 @@ class ArtworkListSerializer(serializers.ModelSerializer):
 class ArtworkCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artwork
-        fields = ("title", "description", "category", "length", "width", "price", "image_url")
+        fields = (
+            "title",
+            "description",
+            "category",
+            "length",
+            "width",
+            "price",
+            "image_url",
+        )
 
     def create(self, validated_data):
         user = self.context["request"].user
