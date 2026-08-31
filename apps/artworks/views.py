@@ -5,6 +5,8 @@ from apps.artworks.serializers import ArtworkListSerializer, ArtworkCreateSerial
 
 
 class ArtworkViewSet(viewsets.ModelViewSet):
+    queryset = Artwork.objects.all()
+
     def get_serializer_class(self):
         if self.action == "create":
             return ArtworkCreateSerializer
