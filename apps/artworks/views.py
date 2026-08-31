@@ -1,11 +1,14 @@
-from rest_framework import generics
+from rest_framework import viewsets
 
 from apps.artworks.models import Artwork
-from apps.artworks.serializers import ArtworkListSerializer
+from apps.artworks.serializers import ArtworkListSerializer, ArtworkCreateSerializer
 
 
-class ArtworkListView(generics.ListAPIView):
-    serializer_class = ArtworkListSerializer
+class ArtworkViewSet(viewsets.ModelViewSet):
+    def get_serializer_class(self):
+        if self.action == "create":
+            return ArtworkCreateSerializer
+        return ArtworkListSerializer
 
     def get_queryset(self):
         queryset = Artwork.objects.all().select_related("artist")

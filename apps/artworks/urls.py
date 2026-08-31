@@ -1,7 +1,15 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
-from apps.artworks.views import ArtworkListView
+from apps.artworks.views import ArtworkViewSet
 
-urlpatterns = [path("", ArtworkListView.as_view(), name="artworks")]
+
+router = DefaultRouter()
+router.register("artworks", ArtworkViewSet)
+
+
+urlpatterns = [
+    path("", include(router.urls))
+]
 
 app_name = "artworks"
