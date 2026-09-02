@@ -42,8 +42,7 @@ if not DEBUG:
     SECURE_HSTS_PRELOAD = True
 
 ALLOWED_HOSTS = os.environ.get(
-    "ALLOWED_HOSTS",
-    ".onrender.com localhost 127.0.0.1"
+    "ALLOWED_HOSTS", ".onrender.com localhost 127.0.0.1"
 ).split(" ")
 
 
@@ -69,7 +68,7 @@ CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.getenv("CLOUD_NAME"),
     "API_KEY": os.getenv("CLOUD_API_KEY"),
     "API_SECRET": os.getenv("CLOUD_API_SECRET"),
-    'STATICFILES_MANIFEST_ROOT': None,
+    "STATICFILES_MANIFEST_ROOT": None,
 }
 
 
