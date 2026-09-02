@@ -16,13 +16,15 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 class User(AbstractUser):
     avatar_url = models.URLField(null=True, blank=True)
-    role = models.CharField(max_length=20, choices=RoleTextChoices.choices)
+    role = models.CharField(
+        max_length=20, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
+    )
     application_status = models.CharField(
         max_length=20,
         choices=ApplicationStatusTextChoices.choices,
         null=True,
         blank=True,
     )
-    number_of_paid_cell = models.IntegerField(default=0)
+    number_of_paid_cell = models.PositiveIntegerField(default=0)
     created_at = models.DateField(auto_now_add=True)
     bio = models.TextField(max_length=2000)
