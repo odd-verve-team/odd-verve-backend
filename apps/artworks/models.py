@@ -16,17 +16,11 @@ class CategoryTextChoices(models.TextChoices):
     ROMANTICISM = "romanticism"
 
 
-class ModerationStatusTextChoices(models.TextChoices):
+class StatusTextChoices(models.TextChoices):
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
-
-
-class StatusTextChoices(models.TextChoices):
-    DRAFT = "draft"
-    PUBLISHED = "published"
     SOLD = "sold"
-    RESERVED = "reserved"
 
 
 class Artwork(models.Model):
@@ -37,12 +31,7 @@ class Artwork(models.Model):
     painting_length = models.PositiveIntegerField()
     painting_width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    moderation_status = models.CharField(
-        max_length=30,
-        choices=ModerationStatusTextChoices.choices,
-        default=ModerationStatusTextChoices.PENDING,
-    )
-    status = models.CharField(max_length=30, choices=StatusTextChoices.choices)
+    status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     image_url = models.ImageField(
