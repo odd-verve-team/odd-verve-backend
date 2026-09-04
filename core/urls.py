@@ -37,4 +37,5 @@ urlpatterns = [
         name="redoc",
     ),
     path("artworks/", include("apps.artworks.urls")),
+    path("users/", include("apps.users.urls", namespace="users")),
 ]
