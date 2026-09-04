@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from apps.artworks.views import ArtworkViewSet
 
 router = DefaultRouter()
-router.register("artworks", ArtworkViewSet)
+router.register(r"", ArtworkViewSet)
 
 
 urlpatterns = [path("", include(router.urls))]
