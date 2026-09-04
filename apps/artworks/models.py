@@ -34,8 +34,8 @@ class Artwork(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=2000)
     category = models.CharField(max_length=30, choices=CategoryTextChoices.choices)
-    length = models.PositiveIntegerField()
-    width = models.PositiveIntegerField()
+    painting_length = models.PositiveIntegerField()
+    painting_width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
     moderation_status = models.CharField(
         max_length=30,
@@ -45,4 +45,10 @@ class Artwork(models.Model):
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
-    image_url = models.ImageField(upload_to="artworks_images/")
+    image_url = models.ImageField(
+        upload_to="artworks_images/",
+        width_field="image_width",
+        height_field="image_height",
+    )
+    image_width = models.PositiveIntegerField(null=True, blank=True)
+    image_height = models.PositiveIntegerField(null=True, blank=True)
