@@ -34,12 +34,13 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = False
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS", ".onrender.com localhost 127.0.0.1"
@@ -75,8 +76,8 @@ CLOUDINARY_STORAGE = {
 DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -181,8 +182,10 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
+client_url = os.environ.get("CLIENT_URL", "")
+
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get("CLIENT_URL"),
+    url.strip() for url in client_url.split(" ") if url.strip()
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
