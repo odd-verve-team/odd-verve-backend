@@ -1,19 +1,21 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from apps.artworks.models import Artwork
 
 
+class ArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("first_name", "last_name", "avatar_url")
+
+
 class ArtworkListSerializer(serializers.ModelSerializer):
-    artist_full_name = serializers.SerializerMethodField()
+    artist = ArtistSerializer(read_only=True)
 
     class Meta:
         model = Artwork
         fields = "__all__"
         read_only_fields = ("image_width", "image_height")
-
-    def get_artist_full_name(self, obj):
-        full_name = f"{obj.artist.first_name} {obj.artist.last_name}"
-        full_name = full_name.title()
-        return f"{obj.artist.username} {full_name}"
 
 
 class ArtworkCreateSerializer(serializers.ModelSerializer):
