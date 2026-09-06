@@ -35,12 +35,13 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = False
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS", ".onrender.com localhost 127.0.0.1"
