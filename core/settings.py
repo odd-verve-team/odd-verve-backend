@@ -183,8 +183,10 @@ SPECTACULAR_SETTINGS = {
     "SERVE_INCLUDE_SCHEMA": False,
 }
 
+client_url = os.environ.get("CLIENT_URL", "")
+
 CORS_ALLOWED_ORIGINS = [
-    os.environ.get("CLIENT_URL"),
+    url.strip() for url in client_url.split(" ") if url.strip()
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
