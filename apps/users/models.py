@@ -15,7 +15,11 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 
 class User(AbstractUser):
-    avatar_url = models.URLField(null=True, blank=True)
+    avatar_url = models.ImageField(
+        upload_to="avatar_images/",
+        default="default_avatar/default_avatar.png",
+        blank=True
+    )
     role = models.CharField(
         max_length=20, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
     )
