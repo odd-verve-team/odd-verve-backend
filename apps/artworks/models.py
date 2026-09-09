@@ -23,7 +23,7 @@ class StatusTextChoices(models.TextChoices):
     SOLD = "sold"
 
 
-class MediumTestChoices(models.TextChoices):
+class MediumTextChoices(models.TextChoices):
     OIL = "oil"
     ACRYLIC = "acrylic"
     WATERCOLOR = "watercolor"
@@ -44,7 +44,7 @@ class Artwork(models.Model):
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     year = models.PositiveIntegerField()
-    medium = models.CharField(max_length=30, choices=MediumTestChoices.choices)
+    medium = models.CharField(max_length=30, choices=MediumTextChoices.choices)
     image_url = models.ImageField(
         upload_to="artworks_images/",
         width_field="image_width",
