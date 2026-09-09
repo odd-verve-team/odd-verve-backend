@@ -23,6 +23,15 @@ class StatusTextChoices(models.TextChoices):
     SOLD = "sold"
 
 
+class MediumTextChoices(models.TextChoices):
+    OIL = "oil"
+    ACRYLIC = "acrylic"
+    WATERCOLOR = "watercolor"
+    GRAPHICS = "graphics"
+    MIXED_MEDIA = "mixed_media"
+    LITHOGRAPHY = "lithography"
+
+
 class Artwork(models.Model):
     artist = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -34,6 +43,8 @@ class Artwork(models.Model):
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
+    year = models.PositiveIntegerField()
+    medium = models.CharField(max_length=30, choices=MediumTextChoices.choices)
     image_url = models.ImageField(
         upload_to="artworks_images/",
         width_field="image_width",

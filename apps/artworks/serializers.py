@@ -28,6 +28,8 @@ class ArtworkCreateSerializer(serializers.ModelSerializer):
             "painting_length",
             "painting_width",
             "price",
+            "year",
+            "medium",
             "image_url",
         )
 
