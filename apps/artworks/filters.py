@@ -9,28 +9,34 @@ from apps.artworks.models import (
 )
 
 
+class ChoiceInFilter(django_filters.BaseInFilter, django_filters.ChoiceFilter):
+    pass
+
+
 class ArtworkFilter(django_filters.FilterSet):
     is_featured = django_filters.BooleanFilter()
     status = django_filters.ChoiceFilter(choices=StatusTextChoices.choices)
     price_lte = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
     year_lte = django_filters.NumberFilter(field_name="year", lookup_expr="lte")
-    category = django_filters.ChoiceFilter(choices=CategoryTextChoices.choices)
-    medium = django_filters.ChoiceFilter(choices=MediumTextChoices.choices)
+    category = ChoiceInFilter(lookup_expr="in", choices=CategoryTextChoices.choices)
+    medium = ChoiceInFilter(lookup_expr="in", choices=MediumTextChoices.choices)
     size = django_filters.CharFilter(method="filter_by_size")
 
     sort = django_filters.CharFilter(method="filter_by_sort")
 
     def filter_by_size(self, queryset, name, value):
         try:
-            painting_length, painting_width = value.split("x")
-            painting_length, painting_width = (
-                painting_length.strip(),
-                painting_width.strip(),
-            )
-            if painting_length.isdigit() and painting_width.isdigit():
-                return queryset.filter(
-                    painting_length=painting_length, painting_width=painting_width
+            value = value.split(",")
+            for size in value:
+                painting_length, painting_width = size.split("x")
+                painting_length, painting_width = (
+                    painting_length.strip(),
+                    painting_width.strip(),
                 )
+                if painting_length.isdigit() and painting_width.isdigit():
+                    return queryset.filter(
+                        painting_length=painting_length, painting_width=painting_width
+                    )
             return queryset
         except Exception:
             return queryset
