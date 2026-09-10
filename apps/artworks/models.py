@@ -1,4 +1,7 @@
+from django.core.validators import MaxValueValidator
 from django.db import models
+
+from datetime import datetime
 
 from apps.users.models import User
 
@@ -32,6 +35,10 @@ class MediumTextChoices(models.TextChoices):
     LITHOGRAPHY = "lithography"
 
 
+def get_current_year() -> int:
+    return datetime.now().year
+
+
 class Artwork(models.Model):
     artist = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
@@ -43,7 +50,7 @@ class Artwork(models.Model):
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
-    year = models.PositiveIntegerField()
+    year = models.PositiveIntegerField(validators=[MaxValueValidator(get_current_year)])
     medium = models.CharField(max_length=30, choices=MediumTextChoices.choices)
     image_url = models.ImageField(
         upload_to="artworks_images/",
