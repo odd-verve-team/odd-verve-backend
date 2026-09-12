@@ -1,3 +1,5 @@
+from random import choices
+
 import django_filters
 from django.db.models import F
 
@@ -13,9 +15,13 @@ class ChoiceInFilter(django_filters.BaseInFilter, django_filters.ChoiceFilter):
     pass
 
 
+class StatusInFilter(django_filters.BaseInFilter, django_filters.ChoiceFilter):
+    pass
+
+
 class ArtworkFilter(django_filters.FilterSet):
     is_featured = django_filters.BooleanFilter()
-    status = django_filters.ChoiceFilter(choices=StatusTextChoices.choices)
+    status = StatusInFilter(lookup_expr="in", choices=StatusTextChoices.choices)
     price_lte = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
     year_lte = django_filters.NumberFilter(field_name="year", lookup_expr="lte")
     category = ChoiceInFilter(lookup_expr="in", choices=CategoryTextChoices.choices)
