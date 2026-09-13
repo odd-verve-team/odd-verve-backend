@@ -6,7 +6,7 @@ from apps.artworks.models import Artwork
 class ArtistSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("first_name", "last_name", "avatar_url")
+        fields = ("id", "first_name", "last_name", "avatar_url")
 
 
 class ArtworkListSerializer(serializers.ModelSerializer):
