@@ -29,6 +29,7 @@ class ArtworkPagination(PageNumberPagination):
 
 class ArtworkViewSet(viewsets.ModelViewSet):
     queryset = Artwork.objects.all()
+    serializer_class = ArtworkListSerializer
     pagination_class = ArtworkPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = ArtworkFilter

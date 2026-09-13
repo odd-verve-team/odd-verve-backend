@@ -1,7 +1,7 @@
-from django.core.validators import MaxValueValidator
-from django.db import models
+import datetime
 
-from datetime import datetime
+from django.core.exceptions import ValidationError
+from django.db import models
 
 from apps.users.models import User
 
@@ -35,8 +35,9 @@ class MediumTextChoices(models.TextChoices):
     LITHOGRAPHY = "lithography"
 
 
-def get_current_year() -> int:
-    return datetime.now().year
+def validate_year(value: int) -> None:
+    if value > datetime.date.today().year:
+        raise ValidationError("Year can not be later than current year.")
 
 
 class Artwork(models.Model):
@@ -50,7 +51,7 @@ class Artwork(models.Model):
     status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
-    year = models.PositiveIntegerField(validators=[MaxValueValidator(get_current_year)])
+    year = models.PositiveIntegerField(validators=[validate_year])
     medium = models.CharField(max_length=30, choices=MediumTextChoices.choices)
     image_url = models.ImageField(
         upload_to="artworks_images/",
