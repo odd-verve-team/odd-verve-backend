@@ -1,5 +1,3 @@
-from random import choices
-
 import django_filters
 from django.db.models import F
 
@@ -20,6 +18,7 @@ class StatusInFilter(django_filters.BaseInFilter, django_filters.ChoiceFilter):
 
 
 class ArtworkFilter(django_filters.FilterSet):
+    artist = django_filters.NumberFilter(lookup_expr="exact")
     is_featured = django_filters.BooleanFilter()
     status = StatusInFilter(lookup_expr="in", choices=StatusTextChoices.choices)
     price_lte = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
