@@ -22,7 +22,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
-    category = serializers.SlugRelatedField(
+    artworks = serializers.SlugRelatedField(
         slug_field="category",
         many=True,
         queryset=Artwork.objects.all()
