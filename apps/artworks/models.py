@@ -1,3 +1,6 @@
+import datetime
+
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from apps.users.models import User
@@ -16,17 +19,25 @@ class CategoryTextChoices(models.TextChoices):
     ROMANTICISM = "romanticism"
 
 
-class ModerationStatusTextChoices(models.TextChoices):
+class StatusTextChoices(models.TextChoices):
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
-
-
-class StatusTextChoices(models.TextChoices):
-    DRAFT = "draft"
-    PUBLISHED = "published"
     SOLD = "sold"
-    RESERVED = "reserved"
+
+
+class MediumTextChoices(models.TextChoices):
+    OIL = "oil"
+    ACRYLIC = "acrylic"
+    WATERCOLOR = "watercolor"
+    GRAPHICS = "graphics"
+    MIXED_MEDIA = "mixed_media"
+    LITHOGRAPHY = "lithography"
+
+
+def validate_year(value: int) -> None:
+    if value > datetime.date.today().year:
+        raise ValidationError("Year can not be later than current year.")
 
 
 class Artwork(models.Model):
@@ -34,15 +45,18 @@ class Artwork(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=2000)
     category = models.CharField(max_length=30, choices=CategoryTextChoices.choices)
-    length = models.PositiveIntegerField()
-    width = models.PositiveIntegerField()
+    painting_length = models.PositiveIntegerField()
+    painting_width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    moderation_status = models.CharField(
-        max_length=30,
-        choices=ModerationStatusTextChoices.choices,
-        default=ModerationStatusTextChoices.PENDING,
-    )
-    status = models.CharField(max_length=30, choices=StatusTextChoices.choices)
+    status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
-    image_url = models.ImageField(upload_to="artworks_images/")
+    year = models.PositiveIntegerField(validators=[validate_year])
+    medium = models.CharField(max_length=30, choices=MediumTextChoices.choices)
+    image_url = models.ImageField(
+        upload_to="artworks_images/",
+        width_field="image_width",
+        height_field="image_height",
+    )
+    image_width = models.PositiveIntegerField(null=True, blank=True)
+    image_height = models.PositiveIntegerField(null=True, blank=True)

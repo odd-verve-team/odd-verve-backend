@@ -1,19 +1,21 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
 from apps.artworks.models import Artwork
 
 
+class ArtistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "first_name", "last_name", "avatar_url")
+
+
 class ArtworkListSerializer(serializers.ModelSerializer):
-    artist_full_name = serializers.SerializerMethodField()
+    artist = ArtistSerializer(read_only=True)
 
     class Meta:
         model = Artwork
-        fields = ("image_url", "artist_full_name")
-
-    def get_artist_full_name(self, obj):
-        full_name = f"{obj.artist.first_name} {obj.artist.last_name}"
-        full_name = full_name.title()
-        return f"{obj.artist.username} {full_name}"
+        fields = "__all__"
+        read_only_fields = ("image_width", "image_height")
 
 
 class ArtworkCreateSerializer(serializers.ModelSerializer):
@@ -23,12 +25,14 @@ class ArtworkCreateSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "category",
-            "length",
-            "width",
+            "painting_length",
+            "painting_width",
             "price",
+            "year",
+            "medium",
             "image_url",
         )
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict):
         user = self.context["request"].user
         return Artwork.objects.create(artist=user, **validated_data)
