@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "apps.artworks",
     "django_filters",
     "apps.users",
+    "apps.rag"
 ]
 
 CLOUDINARY_STORAGE = {
