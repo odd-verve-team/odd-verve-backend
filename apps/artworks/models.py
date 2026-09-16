@@ -41,7 +41,7 @@ def validate_year(value: int) -> None:
 
 
 class Artwork(models.Model):
-    artist = models.ForeignKey(User, on_delete=models.CASCADE)
+    artist = models.ForeignKey(User, on_delete=models.CASCADE, related_name="artworks")
     title = models.CharField(max_length=200)
     description = models.TextField(max_length=2000)
     category = models.CharField(max_length=30, choices=CategoryTextChoices.choices)
