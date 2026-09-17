@@ -22,15 +22,39 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserListSerializer(serializers.ModelSerializer):
-    artworks = serializers.SlugRelatedField(
-        slug_field="category",
-        many=True,
-        queryset=Artwork.objects.all()
+    artworks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    art_categories = serializers.SlugRelatedField(
+        slug_field="category", many=True, read_only=True, source="artworks"
     )
+
     class Meta:
         model = get_user_model()
-        fields = "__all__"
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "avatar_url",
+            "role",
+            "artworks",
+            "art_categories",
+        )
 
 
 class UserDetailSerializer(UserListSerializer):
-    pass
+    class Meta:
+        model = get_user_model()
+        fields = (
+            "id",
+            "username",
+            "first_name",
+            "last_name",
+            "avatar_url",
+            "role",
+            "application_status",
+            "number_of_paid_cell",
+            "artworks",
+            "art_categories",
+            "created_at",
+            "bio",
+        )
