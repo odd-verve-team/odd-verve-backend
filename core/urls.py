@@ -38,4 +38,5 @@ urlpatterns = [
     ),
     path("artworks/", include("apps.artworks.urls")),
     path("users/", include("apps.users.urls", namespace="users")),
+    path("ai/", include("apps.rag.urls", namespace="ai"))
 ]
