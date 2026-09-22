@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -34,13 +35,12 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = False
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS", ".onrender.com localhost 127.0.0.1"
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "apps.artworks",
     "django_filters",
     "apps.users",
+    "rest_framework_simplejwt",
 ]
 
 CLOUDINARY_STORAGE = {
@@ -174,6 +175,9 @@ STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 SPECTACULAR_SETTINGS = {
@@ -190,3 +194,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": False,
+}
