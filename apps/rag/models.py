@@ -1,9 +1,27 @@
 from django.db import models
 from pgvector.django import VectorField, HnswIndex
 
+from apps.users.models import User
+
+
+class ChatRolesTextChoices(models.TextChoices):
+    USER = "user"
+    MODEL = "model"
+
+
+class ChatSession(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="chats")
+
+
+class ChatMessage(models.Model):
+    session = models.ForeignKey(ChatSession, on_delete=models.CASCADE, related_name="message")
+    role = models.CharField(max_length=255, choices=ChatRolesTextChoices.choices)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
 
 class Document(models.Model):
-    title = models.CharField(max_length=50, unique=True)
+    title = models.CharField(max_length=255, unique=True)
     body = models.TextField()
     embedding = VectorField(dimensions=768)
 
