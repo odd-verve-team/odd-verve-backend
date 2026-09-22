@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -63,7 +64,8 @@ INSTALLED_APPS = [
     "apps.artworks",
     "django_filters",
     "apps.users",
-    "apps.rag"
+    "apps.rag",
+    'rest_framework_simplejwt',
 ]
 
 CLOUDINARY_STORAGE = {
@@ -174,6 +176,9 @@ STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
 }
 
 SPECTACULAR_SETTINGS = {
@@ -188,3 +193,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
+    "ROTATE_REFRESH_TOKENS": False,
+}
