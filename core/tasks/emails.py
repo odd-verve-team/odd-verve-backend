@@ -1,0 +1,35 @@
+import os
+import smtplib
+import random
+from email.message import EmailMessage
+
+from celery import Celery
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
+app = Celery("emails", broker=f"redis://:{os.environ.get('REDIS_HOST', 'redis')}:6379/0")
+
+
+@app.task(bind=True, max_retries=3, default_retry_delay=60)
+def send_email(self, email_title: str, receiver_email: str, email_body: str) -> None:
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+
+    sender_email = os.environ.get("SENDER_EMAIL")
+    sender_password = os.environ.get("SENDER_EMAIL_PASSWORD")
+
+    email = EmailMessage()
+    email["Subject"] = email_title
+    email["From"] = sender_email
+    email["To"] = receiver_email
+    email.set_content(email_body)
+
+    try:
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(sender_email, sender_password)
+            server.send_message(email)
+    except Exception as error:
+        raise self.retry(exc=error)
