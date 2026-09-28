@@ -74,9 +74,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class UserListSerializer(serializers.ModelSerializer):
     artworks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    art_categories = serializers.SlugRelatedField(
-        slug_field="category", many=True, read_only=True, source="artworks"
-    )
+    art_categories = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
@@ -90,6 +88,14 @@ class UserListSerializer(serializers.ModelSerializer):
             "artworks",
             "art_categories",
         )
+
+    def get_art_categories(self, obj):
+        unique_categories = []
+        artworks = obj.artworks.all()
+        for artwork in artworks:
+            if artwork.category not in unique_categories:
+                unique_categories.append(artwork.category)
+        return unique_categories
 
 
 class UserDetailSerializer(UserListSerializer):
