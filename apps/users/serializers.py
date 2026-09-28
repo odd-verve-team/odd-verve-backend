@@ -1,9 +1,9 @@
 from typing import Any, Optional
-from apps.users.backends import CustomBackend
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions, serializers
+from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import AuthUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import Token, RefreshToken
@@ -31,9 +31,10 @@ class TokenObtainSerializer(serializers.Serializer):
         except KeyError:
             pass
 
-        custom_backend = CustomBackend()
+        self.user = authenticate(**authenticate_kwargs)
 
-        self.user = custom_backend.authenticate(**authenticate_kwargs)
+        if self.user is None:
+            raise ValidationError(detail="User not found or email is invalid")
 
         if not api_settings.USER_AUTHENTICATION_RULE(self.user):
             raise exceptions.AuthenticationFailed(
