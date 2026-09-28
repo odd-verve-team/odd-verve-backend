@@ -69,10 +69,7 @@ class CustomTokenObtainSerializer(TokenObtainSerializer):
 class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
-        fields = ("email")
-
-    def create(self, validated_data: dict):
-        return get_user_model().objects.create_user(**validated_data)
+        fields = ("email",)
 
 
 class UserListSerializer(serializers.ModelSerializer):
