@@ -99,19 +99,11 @@ class UserListSerializer(serializers.ModelSerializer):
 
 
 class UserDetailSerializer(UserListSerializer):
-    class Meta:
+    class Meta(UserListSerializer.Meta):
         model = get_user_model()
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "avatar_url",
-            "role",
+        fields = UserListSerializer.Meta.fields + (
             "application_status",
             "number_of_paid_cell",
-            "artworks",
-            "art_categories",
             "created_at",
             "bio",
         )
