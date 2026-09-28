@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    container_name: odd-verve-backend
+    command:
+      - "python manage.py migrate &
+      python manage.py runserver 0.0.0.0:8000"
+    environment:
+        - .env
+    depends_on:
+       - redis
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
