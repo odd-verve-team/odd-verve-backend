@@ -16,9 +16,7 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 class User(AbstractUser):
     avatar_url = models.ImageField(
-        upload_to="avatar_images/",
-        default="default_avatar.png",
-        blank=True
+        upload_to="avatar_images/", default="default_avatar.png", blank=True
     )
     role = models.CharField(
         max_length=20, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
@@ -31,4 +29,4 @@ class User(AbstractUser):
     )
     number_of_paid_cell = models.PositiveIntegerField(default=0)
     created_at = models.DateField(auto_now_add=True)
-    bio = models.TextField(max_length=2000)
+    bio = models.TextField(max_length=2000, null=True, blank=True)
