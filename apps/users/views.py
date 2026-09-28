@@ -55,9 +55,9 @@ def send_authentication_email_code_view(request):
         receiver_email=receiver_email,
         email_body=f"Your code is {code}",
     )
-    redis_ = redis.Redis(
-        host=os.getenv("REDIS_HOST", "redis"), port=6379, decode_responses=True
-    )
+
+    redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+    redis_ = redis.Redis.from_url(redis_url, decode_responses=True)
     redis_.set(f"{receiver_email}_code", code, ex=300)
 
     return Response(data="Email was sent", status=status.HTTP_200_OK)
@@ -68,9 +68,8 @@ def authenticate_user_view(request):
     email = request.data.get("email")
     input_code = request.data.get("code")
 
-    redis_ = redis.Redis(
-        host=os.getenv("REDIS_HOST", "redis"), port=6379, decode_responses=True
-    )
+    redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+    redis_ = redis.Redis.from_url(redis_url, decode_responses=True)
     saved_code = redis_.get(f"{email}_code")
     if saved_code is None:
         return Response(
