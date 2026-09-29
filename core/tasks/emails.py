@@ -9,7 +9,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-app = Celery("emails", broker=f"redis://:{os.environ.get('REDIS_HOST', 'redis')}:6379/0")
+redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+
+app = Celery("emails", broker=redis_url, backend=redis_url)
 
 
 @app.task(bind=True, max_retries=3, default_retry_delay=60)
