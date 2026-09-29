@@ -13,6 +13,20 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    volumes:
+      - .:/app
+
+  celery_worker:
+    build: .
+    container_name: "odd-verve-celery-worker"
+    command: >
+      sh -c "celery -A core.tasks.emails worker --loglevel=info"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    volumes:
+      - .:/app
 
   redis:
     image: redis:7-alpine
