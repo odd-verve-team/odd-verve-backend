@@ -68,7 +68,7 @@ def send_authentication_email_code_view(request):
 def authenticate_user_view(request: Request) -> Response:
     email = request.data.get("email")
     try:
-        validate_email(email)
+        validate_email(email, check_deliverability=True)
     except EmailNotValidError as e:
         return Response(data={"detail": f"Email is not valid: {e}"}, status=status.HTTP_400_BAD_REQUEST)
 
