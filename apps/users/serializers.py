@@ -2,6 +2,7 @@ from typing import Any, Optional
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
+from email_validator import validate_email, EmailNotValidError
 from rest_framework import exceptions, serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework_simplejwt.serializers import AuthUser
@@ -24,7 +25,7 @@ class TokenObtainSerializer(serializers.Serializer):
 
     def validate(self, attrs: dict[str, Any]) -> dict[Any, Any]:
         authenticate_kwargs = {
-            self.email: attrs[self.email],
+            "email": attrs[self.email],
         }
         try:
             authenticate_kwargs["request"] = self.context["request"]
@@ -41,12 +42,11 @@ class TokenObtainSerializer(serializers.Serializer):
                 self.error_messages["no_active_account"],
                 "no_active_account",
             )
-
         return {}
 
     @classmethod
     def get_token(cls, user: AuthUser) -> Token:
-        return cls.token_class.for_user(user)  # type: ignore
+        return cls.token_class.for_user(user)
 
 
 class CustomTokenObtainSerializer(TokenObtainSerializer):
@@ -57,8 +57,8 @@ class CustomTokenObtainSerializer(TokenObtainSerializer):
 
         refresh = self.get_token(self.user)
 
-        data["refresh"] = str(refresh)
-        data["access"] = str(refresh.access_token)
+        data["refresh_token"] = str(refresh)
+        data["access_token"] = str(refresh.access_token)
 
         if api_settings.UPDATE_LAST_LOGIN:
             update_last_login(None, self.user)
@@ -66,10 +66,20 @@ class CustomTokenObtainSerializer(TokenObtainSerializer):
         return data
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class AuthenticationSerializer(serializers.ModelSerializer):
     class Meta:
         model = get_user_model()
         fields = ("email",)
+
+    def create(self, validated_data):
+        return get_user_model().objects.create(**validated_data)
+
+    def validate_email(self, value):
+        try:
+            validate_email(value, check_deliverability=True)
+        except EmailNotValidError as e:
+            raise ValidationError(detail=f"Email is incorrect: {e}")
+        return value
 
 
 class UserListSerializer(serializers.ModelSerializer):
