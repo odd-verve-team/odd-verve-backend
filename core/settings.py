@@ -35,12 +35,13 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 DEBUG = False
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
 
 ALLOWED_HOSTS = os.environ.get(
     "ALLOWED_HOSTS", ".onrender.com localhost 127.0.0.1"
@@ -175,9 +176,9 @@ STATICFILES_STORAGE = "whitenoise.storage.StaticFilesStorage"
 
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -189,9 +190,7 @@ SPECTACULAR_SETTINGS = {
 
 client_url = os.environ.get("CLIENT_URL", "")
 
-CORS_ALLOWED_ORIGINS = [
-    url.strip() for url in client_url.split(" ") if url.strip()
-]
+CORS_ALLOWED_ORIGINS = [url.strip() for url in client_url.split(" ") if url.strip()]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -200,4 +199,10 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
     "ROTATE_REFRESH_TOKENS": False,
+    "TOKEN_OBTAIN_SERIALIZER": "apps.users.serializers.CustomTokenObtainSerializer",
 }
+
+AUTHENTICATION_BACKENDS = [
+    "apps.users.backends.CustomBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
