@@ -16,9 +16,6 @@ app = Celery("emails", broker=redis_url, backend=redis_url)
 
 @app.task(bind=True, max_retries=3, default_retry_delay=60)
 def send_email(self, email_title: str, receiver_email: str, email_body: str) -> None:
-    smtp_server = "smtp.gmail.com"
-    smtp_port = 587
-
     sender_email = os.environ.get("SENDER_EMAIL")
     sender_password = os.environ.get("SENDER_EMAIL_PASSWORD")
 
@@ -29,8 +26,7 @@ def send_email(self, email_title: str, receiver_email: str, email_body: str) -> 
     email.set_content(email_body)
 
     try:
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
             server.login(sender_email, sender_password)
             server.send_message(email)
     except Exception as error:
