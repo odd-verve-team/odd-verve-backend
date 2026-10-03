@@ -1,13 +1,10 @@
 import os
-import smtplib
-import random
-from email.message import EmailMessage
-
+import yagmail
 from celery import Celery
 from dotenv import load_dotenv
 
-load_dotenv()
 
+load_dotenv()
 
 redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
 
@@ -18,16 +15,12 @@ app = Celery("emails", broker=redis_url, backend=redis_url)
 def send_email(self, email_title: str, receiver_email: str, email_body: str) -> None:
     sender_email = os.environ.get("SENDER_EMAIL")
     sender_password = os.environ.get("SENDER_EMAIL_PASSWORD")
-
-    email = EmailMessage()
-    email["Subject"] = email_title
-    email["From"] = sender_email
-    email["To"] = receiver_email
-    email.set_content(email_body)
-
     try:
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(sender_email, sender_password)
-            server.send_message(email)
+        with yagmail.SMTP(user=sender_email, password=sender_password) as yag:
+            yag.send(
+                to=receiver_email,
+                subject=email_title,
+                contents=email_body
+            )
     except Exception as error:
         raise self.retry(exc=error)
