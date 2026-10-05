@@ -7,6 +7,9 @@ from dotenv import load_dotenv
 load_dotenv()
 
 redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
+resend_api_key = os.getenv("RESEND_API_KEY")
+
+resend.api_key = resend_api_key
 
 app = Celery("emails", broker=redis_url, backend=redis_url)
 
