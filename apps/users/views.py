@@ -62,6 +62,9 @@ def authenticate_user_view(request: Request) -> Response:
     validated_email = authentication_serializer.validated_data["email"]
     request_code = request.data.get("code")
 
+    if request_code is None:
+        return Response(data={"detail: Code field can not be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
     try:
         validate_email(validated_email, check_deliverability=True)
     except EmailNotValidError as e:
