@@ -1,0 +1,52 @@
+services:
+  app:
+    build: .
+    container_name: odd-verve-backend
+    command: >
+      sh -c "python manage.py collectstatic --noinput && 
+      python manage.py migrate && (python manage.py createsuperuser --no-input || true) &&
+      gunicorn core.wsgi:application --bind 0.0.0.0:8000"
+    env_file:
+        - .env
+    expose:
+      - "8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - static_volume:/app/staticfiles
+
+  celery_worker:
+    build: .
+    container_name: "odd-verve-celery-worker"
+    command: >
+      sh -c "celery -A core.tasks.emails worker --loglevel=info"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+    restart: always
+
+  redis:
+    image: redis:7-alpine
+    container_name: odd-verve-redis
+    command: >
+      redis-server
+      --requirepass ${REDIS_PASSWORD}
+      --appendonly yes
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+    restart: always
+    expose:
+      - "6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  redis_data:
+  static_volume:
