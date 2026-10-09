@@ -76,9 +76,18 @@ class User(AbstractUser):
     created_at = models.DateField(auto_now_add=True)
     bio = models.TextField(max_length=2000, null=True, blank=True)
     address = models.OneToOneField(
-        "Address", on_delete=models.SET_NULL, blank=True, null=True, related_name="user"
+        "Address", on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="user"
     )
-    social_media = models.OneToOneField("SocialMedia", on_delete=models.SET_NULL, blank=True, null=True, related_name="user")
+    social_media = models.OneToOneField(
+        "SocialMedia",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="user",
+    )
 
     objects = UserManager()
 
