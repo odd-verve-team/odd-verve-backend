@@ -113,7 +113,12 @@ class UserDetailSerializer(UserListSerializer):
         model = get_user_model()
         fields = UserListSerializer.Meta.fields + (
             "application_status",
-            "number_of_paid_cell",
+            "number_of_paid_cell"
+            "phone_number",
             "created_at",
             "bio",
+            "statement",
+            "style",
+            "address",
+            "social_media",
         )
