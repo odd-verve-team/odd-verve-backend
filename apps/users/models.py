@@ -70,12 +70,15 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
+    statement = models.TextField(null=True, blank=True)
+    style = models.TextField(null=True, blank=True)
     number_of_paid_cell = models.PositiveIntegerField(default=0)
     created_at = models.DateField(auto_now_add=True)
     bio = models.TextField(max_length=2000, null=True, blank=True)
     address = models.OneToOneField(
         "Address", on_delete=models.SET_NULL, blank=True, null=True, related_name="user"
     )
+    social_media = models.OneToOneField("SocialMedia", on_delete=models.SET_NULL, blank=True, null=True, related_name="user")
 
     objects = UserManager()
 
@@ -84,3 +87,10 @@ class Address(models.Model):
     country = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     postal_code = models.PositiveIntegerField()
+
+
+class SocialMedia(models.Model):
+    instagram = models.URLField(max_length=255, unique=True)
+    telegram = models.URLField(max_length=255, unique=True)
+    twitter = models.URLField(max_length=255, unique=True)
+    facebook = models.URLField(max_length=255, unique=True)
