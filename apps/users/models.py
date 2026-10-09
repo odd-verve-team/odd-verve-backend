@@ -57,6 +57,7 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
     password = models.CharField(max_length=128, blank=True, null=True)
+    phone_number = models.CharField(max_length=11, blank=True, null=True, unique=True)
     avatar_url = models.ImageField(
         upload_to="avatar_images/", default="default_avatar.png", blank=True
     )
@@ -74,3 +75,5 @@ class User(AbstractUser):
     bio = models.TextField(max_length=2000, null=True, blank=True)
 
     objects = UserManager()
+
+
