@@ -6,5 +6,4 @@ from apps.artworks.views import ArtworkViewSet
 router = DefaultRouter()
 router.register(r"", ArtworkViewSet, basename="artwork")
 
-
 urlpatterns = [path("", include(router.urls))]
