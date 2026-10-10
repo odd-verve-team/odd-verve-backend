@@ -50,17 +50,11 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 
 class User(AbstractUser):
-    email = models.EmailField()
-    username = models.CharField(max_length=150, blank=True, null=True)
+    email = models.EmailField(unique=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
-    password = models.CharField(max_length=128, blank=True, null=True)
-    phone_number = models.CharField(max_length=11, blank=True, null=True, unique=True)
-    avatar_url = models.ImageField(
-        upload_to="avatar_images/", default="default_avatar.png", blank=True
-    )
     role = models.CharField(
         max_length=20, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
     )
@@ -70,35 +64,38 @@ class User(AbstractUser):
         null=True,
         blank=True,
     )
-    statement = models.TextField(null=True, blank=True)
-    style = models.TextField(null=True, blank=True)
-    number_of_paid_cell = models.PositiveIntegerField(default=0)
-    created_at = models.DateField(auto_now_add=True)
-    bio = models.TextField(max_length=2000, null=True, blank=True)
-    address = models.OneToOneField(
-        "Address", on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="user"
-    )
-    social_media = models.OneToOneField(
-        "SocialMedia",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-        related_name="user",
-    )
 
     objects = UserManager()
 
+    def __str__(self) -> str:
+        return f"{self.id} User"
+
+
+class ArtistProfile(models.Model):
+    artist = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist_profile")
+    phone_number = models.CharField(max_length=11, unique=True)
+    avatar_url = models.ImageField(
+        upload_to="avatar_images/", default="default_avatar.png",
+    )
+    statement = models.TextField(max_length=200, unique=True)
+    style = models.TextField(max_length=200, unique=True)
+    number_of_paid_cell = models.PositiveIntegerField(default=0)
+    created_at = models.DateField(auto_now_add=True)
+    bio = models.TextField(max_length=200, unique=True)
+
+    def __str__(self) -> str:
+        return f"{self.artist.id} User's profile"
+
 
 class Address(models.Model):
+    user = models.OneToOneField(ArtistProfile, on_delete=models.CASCADE, related_name="address")
     country = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
-    postal_code = models.PositiveIntegerField()
+    postal_code = models.CharField(max_length=255)
 
 
 class SocialMedia(models.Model):
+    user = models.OneToOneField(ArtistProfile, on_delete=models.CASCADE, related_name="social_media")
     instagram = models.URLField(max_length=255, unique=True)
     telegram = models.URLField(max_length=255, unique=True)
     twitter = models.URLField(max_length=255, unique=True)
