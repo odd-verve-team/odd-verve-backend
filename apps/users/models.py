@@ -72,10 +72,13 @@ class User(AbstractUser):
 
 
 class ArtistProfile(models.Model):
-    artist = models.OneToOneField(User, on_delete=models.CASCADE, related_name="artist_profile")
+    artist = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name="artist_profile"
+    )
     phone_number = models.CharField(max_length=11, unique=True)
     avatar_url = models.ImageField(
-        upload_to="avatar_images/", default="default_avatar.png",
+        upload_to="avatar_images/",
+        default="default_avatar.png",
     )
     statement = models.TextField(max_length=200, unique=True)
     style = models.TextField(max_length=200, unique=True)
@@ -88,14 +91,18 @@ class ArtistProfile(models.Model):
 
 
 class Address(models.Model):
-    user = models.OneToOneField(ArtistProfile, on_delete=models.CASCADE, related_name="address")
+    user = models.OneToOneField(
+        ArtistProfile, on_delete=models.CASCADE, related_name="address"
+    )
     country = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     postal_code = models.CharField(max_length=255)
 
 
 class SocialMedia(models.Model):
-    user = models.OneToOneField(ArtistProfile, on_delete=models.CASCADE, related_name="social_media")
+    user = models.OneToOneField(
+        ArtistProfile, on_delete=models.CASCADE, related_name="social_media"
+    )
     instagram = models.URLField(max_length=255, unique=True)
     telegram = models.URLField(max_length=255, unique=True)
     twitter = models.URLField(max_length=255, unique=True)

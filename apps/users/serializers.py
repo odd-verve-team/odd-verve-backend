@@ -90,7 +90,14 @@ class ArtistSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ("id", "email", "role", "application_status", "artworks", "art_categories")
+        fields = (
+            "id",
+            "email",
+            "role",
+            "application_status",
+            "artworks",
+            "art_categories",
+        )
 
     def get_art_categories(self, obj):
         unique_categories = []
@@ -120,8 +127,7 @@ class ArtistProfileDetailSerializer(ArtistProfileListSerializer):
     class Meta(ArtistProfileListSerializer.Meta):
         model = ArtistProfile
         fields = ArtistProfileListSerializer.Meta.fields + (
-            "number_of_paid_cell"
-            "phone_number",
+            "number_of_paid_cell" "phone_number",
             "created_at",
             "bio",
             "statement",
