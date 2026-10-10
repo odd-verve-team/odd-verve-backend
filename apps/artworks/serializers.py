@@ -4,13 +4,29 @@ from apps.artworks.models import Artwork
 
 
 class ArtistSerializer(serializers.ModelSerializer):
+    first_name = serializers.SlugRelatedField(
+        many=False,
+        slug_field="first_name",
+        source="artist_profile"
+    )
+    last_name = serializers.SlugRelatedField(
+        many=False,
+        slug_field="last_name",
+        source="artist_profile"
+    )
+    avatar_url = serializers.SlugRelatedField(
+        many=False,
+        slug_field="avatar_url",
+        source="artist_profile"
+    )
+
     class Meta:
         model = get_user_model()
         fields = ("id", "first_name", "last_name", "avatar_url")
 
 
 class ArtworkListSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer(read_only=True)
+    artist = ArtistSerializer()
 
     class Meta:
         model = Artwork
