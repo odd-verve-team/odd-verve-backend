@@ -9,6 +9,8 @@ from rest_framework_simplejwt.serializers import AuthUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import Token, RefreshToken
 
+from apps.users.models import ArtistProfile
+
 
 class TokenObtainSerializer(serializers.Serializer):
     email = get_user_model().EMAIL_FIELD
@@ -82,22 +84,13 @@ class AuthenticationSerializer(serializers.ModelSerializer):
         return value
 
 
-class UserListSerializer(serializers.ModelSerializer):
-    artworks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+class ArtistSerializer(serializers.ModelSerializer):
+    artworks = serializers.PrimaryKeyRelatedField(many=True)
     art_categories = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "avatar_url",
-            "role",
-            "artworks",
-            "art_categories",
-        )
+        fields = ("id", "email", "role", "application_status", "artworks", "art_categories")
 
     def get_art_categories(self, obj):
         unique_categories = []
@@ -108,11 +101,25 @@ class UserListSerializer(serializers.ModelSerializer):
         return unique_categories
 
 
-class UserDetailSerializer(UserListSerializer):
-    class Meta(UserListSerializer.Meta):
-        model = get_user_model()
-        fields = UserListSerializer.Meta.fields + (
-            "application_status",
+class ArtistProfileListSerializer(serializers.ModelSerializer):
+    artist = ArtistSerializer()
+
+    class Meta:
+        model = ArtistProfile
+        fields = (
+            "id",
+            "artist",
+            "username",
+            "first_name",
+            "last_name",
+            "avatar_url",
+        )
+
+
+class ArtistProfileDetailSerializer(ArtistProfileListSerializer):
+    class Meta(ArtistProfileListSerializer.Meta):
+        model = ArtistProfile
+        fields = ArtistProfileListSerializer.Meta.fields + (
             "number_of_paid_cell"
             "phone_number",
             "created_at",
