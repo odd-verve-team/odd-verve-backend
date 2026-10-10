@@ -48,7 +48,11 @@ class Artwork(models.Model):
     painting_length = models.PositiveIntegerField()
     painting_width = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=12, decimal_places=2)
-    status = models.CharField(max_length=30, choices=StatusTextChoices.choices, default=StatusTextChoices.PENDING)
+    status = models.CharField(
+        max_length=30,
+        choices=StatusTextChoices.choices,
+        default=StatusTextChoices.PENDING,
+    )
     is_featured = models.BooleanField(default=False)
     created_at = models.DateField(auto_now_add=True)
     year = models.PositiveIntegerField(validators=[validate_year])

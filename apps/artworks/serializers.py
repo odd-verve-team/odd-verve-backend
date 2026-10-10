@@ -5,19 +5,13 @@ from apps.artworks.models import Artwork
 
 class ArtistSerializer(serializers.ModelSerializer):
     first_name = serializers.SlugRelatedField(
-        many=False,
-        slug_field="first_name",
-        source="artist_profile"
+        many=False, slug_field="first_name", source="artist_profile"
     )
     last_name = serializers.SlugRelatedField(
-        many=False,
-        slug_field="last_name",
-        source="artist_profile"
+        many=False, slug_field="last_name", source="artist_profile"
     )
     avatar_url = serializers.SlugRelatedField(
-        many=False,
-        slug_field="avatar_url",
-        source="artist_profile"
+        many=False, slug_field="avatar_url", source="artist_profile"
     )
 
     class Meta:

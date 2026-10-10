@@ -21,9 +21,9 @@ class ArtworkPagination(PageNumberPagination):
                     "total": self.page.paginator.count,
                     "page": self.page.number,
                     "limit": self.get_page_size(self.request),
-                    "totalPages": self.page.paginator.num_pages
-                }
-             }
+                    "totalPages": self.page.paginator.num_pages,
+                },
+            }
         )
 
 
