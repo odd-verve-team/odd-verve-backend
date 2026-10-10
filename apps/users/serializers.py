@@ -85,7 +85,7 @@ class AuthenticationSerializer(serializers.ModelSerializer):
 
 
 class ArtistSerializer(serializers.ModelSerializer):
-    artworks = serializers.PrimaryKeyRelatedField(many=True)
+    artworks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     art_categories = serializers.SerializerMethodField()
 
     class Meta:
