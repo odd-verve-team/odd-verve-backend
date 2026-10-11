@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
+from django.utils.translation import gettext as _
 
 
 class UserManager(BaseUserManager):
@@ -50,7 +51,8 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 
 class User(AbstractUser):
-    email = models.EmailField(unique=True)
+    username = None
+    email = models.EmailField(_("email_address"))
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
