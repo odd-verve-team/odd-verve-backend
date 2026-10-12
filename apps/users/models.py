@@ -74,8 +74,8 @@ class User(AbstractUser):
 
 
 class ArtistProfile(models.Model):
-    first_name = models.CharField(max_length=255, unique=True)
-    last_name = models.CharField(max_length=255, unique=True)
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
     artist = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="artist_profile"
     )
