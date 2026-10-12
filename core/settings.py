@@ -228,3 +228,7 @@ LOGGING = {
         },
     },
 }
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://odd-verve-backend-b30ee.containers.snapdeploy.app",
+]
