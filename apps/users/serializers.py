@@ -9,7 +9,7 @@ from rest_framework_simplejwt.serializers import AuthUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import Token, RefreshToken
 
-from apps.users.models import ArtistProfile
+from apps.users.models import ArtistProfile, Address, SocialMedia
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -84,7 +84,7 @@ class AuthenticationSerializer(serializers.ModelSerializer):
         return value
 
 
-class ArtistSerializer(serializers.ModelSerializer):
+class ArtistForProfileSerializer(serializers.ModelSerializer):
     artworks = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     art_categories = serializers.SerializerMethodField()
 
@@ -109,25 +109,40 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 
 class ArtistProfileListSerializer(serializers.ModelSerializer):
-    artist = ArtistSerializer()
+    artist = ArtistForProfileSerializer()
 
     class Meta:
         model = ArtistProfile
         fields = (
             "id",
             "artist",
-            "username",
             "first_name",
             "last_name",
             "avatar_url",
         )
 
 
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ("country", "city", "postal_code")
+
+
+class SocialMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialMedia
+        fields = ("instagram", "telegram", "twitter", "facebook")
+
+
 class ArtistProfileDetailSerializer(ArtistProfileListSerializer):
-    class Meta(ArtistProfileListSerializer.Meta):
+    address = AddressSerializer()
+    social_media = SocialMediaSerializer()
+
+    class Meta (ArtistProfileListSerializer.Meta):
         model = ArtistProfile
         fields = ArtistProfileListSerializer.Meta.fields + (
-            "number_of_paid_cell" "phone_number",
+            "number_of_paid_cell",
+            "phone_number",
             "created_at",
             "bio",
             "statement",
