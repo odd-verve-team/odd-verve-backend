@@ -10,9 +10,12 @@ from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from apps.users.serializers import CustomTokenObtainSerializer, AuthenticationSerializer
+from apps.users.serializers import (
+    CustomTokenObtainSerializer,
+    AuthenticationSerializer,
+    UserSerializer,
+)
 from core.tasks.emails import send_email
-
 
 logger = logging.getLogger(__name__)
 redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
@@ -37,8 +40,13 @@ def send_authentication_code_view(request):
             email_body=f"Your code is: {code}",
         )
     except Exception as e:
-        logger.exception(f"An error occurred during creating authentication code and sending an email: {e}")
-        return Response(data={"detail": "Server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.exception(
+            f"An error occurred during creating authentication code and sending an email: {e}"
+        )
+        return Response(
+            data={"detail": "Server error"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
     return Response(data={"detail": "Email was sent"}, status=status.HTTP_200_OK)
 
@@ -78,15 +86,18 @@ def authenticate_user_view(request: Request) -> Response:
         )
 
     try:
-        get_user_model().objects.get(email=validated_email)
+        user = get_user_model().objects.get(email=validated_email)
     except get_user_model().DoesNotExist:
         authentication_serializer.save()
+        user = get_user_model().objects.get(email=validated_email)
 
+    user_serializer = UserSerializer(user)
+    serialized_user = user_serializer.data
     tokens_serializer = CustomTokenObtainSerializer(data={"email": validated_email})
     tokens_serializer.is_valid(raise_exception=True)
     tokens = tokens_serializer.validated_data
     redis_.delete(f"{validated_email}_code")
     return Response(
-        data=tokens,
+        data={"tokens": tokens, "user": serialized_user},
         status=status.HTTP_200_OK,
     )
