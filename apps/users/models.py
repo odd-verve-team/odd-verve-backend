@@ -52,16 +52,16 @@ class ApplicationStatusTextChoices(models.TextChoices):
 
 class User(AbstractUser):
     username = None
-    email = models.EmailField(_("email_address"))
+    email = models.EmailField(_("email_address"), unique=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     role = models.CharField(
-        max_length=20, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
+        max_length=6, choices=RoleTextChoices.choices, default=RoleTextChoices.USER
     )
     application_status = models.CharField(
-        max_length=20,
+        max_length=8,
         choices=ApplicationStatusTextChoices.choices,
         null=True,
         blank=True,
@@ -74,21 +74,20 @@ class User(AbstractUser):
 
 
 class ArtistProfile(models.Model):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    artist = models.OneToOneField(
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
+    user = models.OneToOneField(
         User, on_delete=models.CASCADE, related_name="artist_profile"
     )
-    phone_number = models.CharField(max_length=11, unique=True)
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     avatar_url = models.ImageField(
         upload_to="avatar_images/",
         default="default_avatar.png",
     )
-    statement = models.TextField(max_length=200, unique=True)
-    style = models.TextField(max_length=200, unique=True)
-    number_of_paid_cell = models.PositiveIntegerField(default=0)
+    statement = models.TextField(max_length=200, unique=True, null=True, blank=True)
+    style = models.TextField(max_length=200, unique=True, null=True, blank=True)
     created_at = models.DateField(auto_now_add=True)
-    bio = models.TextField(max_length=200, unique=True)
+    bio = models.TextField(max_length=200, unique=True, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.artist.id} User's profile"
@@ -98,16 +97,16 @@ class Address(models.Model):
     user = models.OneToOneField(
         ArtistProfile, on_delete=models.CASCADE, related_name="address"
     )
-    country = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=255)
+    country = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    postal_code = models.CharField(max_length=255, null=True, blank=True)
 
 
 class SocialMedia(models.Model):
     user = models.OneToOneField(
         ArtistProfile, on_delete=models.CASCADE, related_name="social_media"
     )
-    instagram = models.URLField(max_length=255, unique=True)
-    telegram = models.URLField(max_length=255, unique=True)
-    twitter = models.URLField(max_length=255, unique=True)
-    facebook = models.URLField(max_length=255, unique=True)
+    instagram = models.URLField(unique=True, null=True, blank=True)
+    telegram = models.URLField(unique=True, null=True, blank=True)
+    twitter = models.URLField(unique=True, null=True, blank=True)
+    facebook = models.URLField(unique=True, null=True, blank=True)
