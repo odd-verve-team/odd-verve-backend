@@ -13,7 +13,6 @@ from rest_framework.response import Response
 from apps.users.serializers import CustomTokenObtainSerializer, AuthenticationSerializer
 from core.tasks.emails import send_email
 
-
 logger = logging.getLogger(__name__)
 redis_url = os.getenv("REDIS_URL", "redis://redis:6379/0")
 redis_ = redis.Redis.from_url(redis_url, decode_responses=True)
@@ -37,8 +36,13 @@ def send_authentication_code_view(request):
             email_body=f"Your code is: {code}",
         )
     except Exception as e:
-        logger.exception(f"An error occurred during creating authentication code and sending an email: {e}")
-        return Response(data={"detail": "Server error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        logger.exception(
+            f"An error occurred during creating authentication code and sending an email: {e}"
+        )
+        return Response(
+            data={"detail": "Server error"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
     return Response(data={"detail": "Email was sent"}, status=status.HTTP_200_OK)
 
