@@ -1,4 +1,5 @@
 from typing import Any, Optional
+
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.models import update_last_login
 from django.utils.translation import gettext_lazy as _
@@ -9,7 +10,7 @@ from rest_framework_simplejwt.serializers import AuthUser
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import Token, RefreshToken
 
-from apps.users.models import ArtistProfile, Address, SocialMedia
+from apps.users.models import Profile, Address, SocialMedia
 
 
 class TokenObtainSerializer(serializers.Serializer):
@@ -112,7 +113,7 @@ class ArtistProfileListSerializer(serializers.ModelSerializer):
     artist = ArtistForProfileSerializer()
 
     class Meta:
-        model = ArtistProfile
+        model = Profile
         fields = (
             "id",
             "artist",
@@ -139,7 +140,7 @@ class ArtistProfileDetailSerializer(ArtistProfileListSerializer):
     social_media = SocialMediaSerializer()
 
     class Meta (ArtistProfileListSerializer.Meta):
-        model = ArtistProfile
+        model = Profile
         fields = ArtistProfileListSerializer.Meta.fields + (
             "number_of_paid_cell",
             "phone_number",

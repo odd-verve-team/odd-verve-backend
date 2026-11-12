@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext as _
 
-from .models import User, ArtistProfile
+from .models import User, Profile
 
 
 @admin.register(User)
@@ -42,4 +42,4 @@ class UserAdmin(DjangoUserAdmin):
     ordering = ("email",)
 
 
-admin.site.register(ArtistProfile)
+admin.site.register(Profile)
