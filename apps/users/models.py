@@ -76,9 +76,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     avatar_url = models.ImageField(
         upload_to="avatar_images/",
