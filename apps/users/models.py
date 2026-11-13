@@ -73,11 +73,11 @@ class User(AbstractUser):
         return f"{self.id} User"
 
 
-class ArtistProfile(models.Model):
+class Profile(models.Model):
     first_name = models.CharField(max_length=255, null=True, blank=True)
     last_name = models.CharField(max_length=255, null=True, blank=True)
     user = models.OneToOneField(
-        User, on_delete=models.CASCADE, related_name="artist_profile"
+        User, on_delete=models.CASCADE, related_name="profile"
     )
     phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
     avatar_url = models.ImageField(
@@ -90,12 +90,12 @@ class ArtistProfile(models.Model):
     bio = models.TextField(max_length=200, unique=True, null=True, blank=True)
 
     def __str__(self) -> str:
-        return f"{self.artist.id} User's profile"
+        return f"{self.user.id} User's profile"
 
 
 class Address(models.Model):
-    user = models.OneToOneField(
-        ArtistProfile, on_delete=models.CASCADE, related_name="address"
+    profile = models.OneToOneField(
+        Profile, on_delete=models.CASCADE, related_name="address"
     )
     country = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
@@ -103,8 +103,8 @@ class Address(models.Model):
 
 
 class SocialMedia(models.Model):
-    user = models.OneToOneField(
-        ArtistProfile, on_delete=models.CASCADE, related_name="social_media"
+    profile = models.OneToOneField(
+        Profile, on_delete=models.CASCADE, related_name="social_media"
     )
     instagram = models.URLField(unique=True, null=True, blank=True)
     telegram = models.URLField(unique=True, null=True, blank=True)

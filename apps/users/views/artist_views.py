@@ -1,6 +1,6 @@
 from rest_framework import generics
 
-from apps.users.models import ArtistProfile
+from apps.users.models import Profile
 from apps.users.serializers import (
     ArtistProfileListSerializer,
     ArtistProfileDetailSerializer,
@@ -8,10 +8,10 @@ from apps.users.serializers import (
 
 
 class ArtistProfileListView(generics.ListAPIView):
-    queryset = ArtistProfile.objects.select_related("artist").all()
+    queryset = Profile.objects.select_related("artist").all()
     serializer_class = ArtistProfileListSerializer
 
 
 class ArtistProfileDetailView(generics.RetrieveAPIView):
-    queryset = ArtistProfile.objects.select_related("artist").all()
+    queryset = Profile.objects.select_related("artist").all()
     serializer_class = ArtistProfileDetailSerializer
