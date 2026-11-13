@@ -151,3 +151,9 @@ class ArtistProfileDetailSerializer(ArtistProfileListSerializer):
             "address",
             "social_media",
         )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = get_user_model()
+        fields = ("id", "email", "role", "application_status")

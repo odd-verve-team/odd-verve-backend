@@ -21,7 +21,7 @@ echo "================================================="
 echo "Creating default superuser..."
 echo "================================================="
 echo "                                                 "
-python manage.py createsuperuser --no-input || true
+python manage.py create_superuser
 
 echo "                                                 "
 echo "================================================="

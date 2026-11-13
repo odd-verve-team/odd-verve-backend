@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext as _
 
-from .models import User, Profile
+from .models import User, Profile, Address, SocialMedia
 
 
 @admin.register(User)
@@ -43,3 +43,6 @@ class UserAdmin(DjangoUserAdmin):
 
 
 admin.site.register(Profile)
+admih.site.register(Address)
+admin.site.register(SocialMedia)
+
