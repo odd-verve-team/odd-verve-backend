@@ -43,6 +43,5 @@ class UserAdmin(DjangoUserAdmin):
 
 
 admin.site.register(Profile)
-admih.site.register(Address)
+admin.site.register(Address)
 admin.site.register(SocialMedia)
-
