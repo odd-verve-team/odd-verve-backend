@@ -3,6 +3,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from .models import Notification
+from ..artworks.models import Artwork
 from ..users.models import Profile, RoleTextChoices
 
 
@@ -18,7 +19,9 @@ class NotificationBuyArtworkSerializer(serializers.Serializer):
     phone_number = serializers.IntegerField(allow_null=True)
     country_or_city = serializers.CharField(max_length=255, allow_null=True)
     message = serializers.CharField(max_length=2000, allow_null=True)
-    artwork = serializers.PrimaryKeyRelatedField()
+    artwork = serializers.PrimaryKeyRelatedField(
+        queryset=Artwork.objects.select_related("profile").all()
+    )
 
     def create(self, validated_data):
         artwork = validated_data["artwork"]
