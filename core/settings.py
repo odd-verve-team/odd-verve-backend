@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "apps.artworks",
     "django_filters",
     "apps.users",
+    "apps.notifications",
     "rest_framework_simplejwt",
 ]
 
