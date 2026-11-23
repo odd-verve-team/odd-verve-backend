@@ -28,6 +28,43 @@ class ArtworkListSerializer(serializers.ModelSerializer):
         read_only_fields = ("image_width", "image_height")
 
 
+class ArtworkDetailSerializer(serializers.ModelSerializer):
+    art_categories = serializers.SlugRelatedField(
+        slug_field="category",
+        many=True,
+        source="profile",
+        read_only=True,
+    )
+    bio = serializers.SlugRelatedField(
+        slug_field="bio",
+        many=False,
+        source="profile",
+        read_only=True,
+    )
+    artist = ArtistSerializer.Meta.fields + ("art_categories", "bio")
+
+    class Meta:
+        model = Artwork
+        fields = (
+            "id",
+            "artist",
+            "title",
+            "description",
+            "category",
+            "painting_length",
+            "painting_width",
+            "price",
+            "status",
+            "is_featured",
+            "year",
+            "medium",
+            "image_url",
+            "image_width",
+            "image_height",
+        )
+        read_only_fields = ("image_width", "image_height")
+
+
 class ArtworkCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artwork
