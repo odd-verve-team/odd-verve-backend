@@ -1,5 +1,7 @@
+import re
+
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -8,6 +10,7 @@ from apps.artworks.models import Artwork, StatusTextChoices
 from apps.artworks.serializers import (
     ArtworkListSerializer,
     ArtworkDetailSerializer,
+    ArtworkSearchSerializer,
 )
 
 
@@ -49,3 +52,16 @@ class ArtworkListView(generics.ListAPIView):
 class ArtworkDetailView(generics.RetrieveAPIView):
     queryset = Artwork.objects.select_related("profile").all()
     serializer_class = ArtworkDetailSerializer
+
+
+class ArtworkSearchView(generics.ListAPIView):
+    serializer_class = ArtworkSearchSerializer
+
+    def list(self, request, *args, **kwargs):
+        text = request.query_params.get("text")
+        if text and bool(re.search(r"[a-zA-Z]", text)):
+            text = re.sub(r"[^a-zA-Z]", "", text)
+            queryset = Artwork.objects.filter(title__icontains=text)[:4]
+            serializer = ArtworkSearchSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return []
