@@ -40,5 +40,6 @@ urlpatterns = [
     path("artworks/", include("apps.artworks.urls")),
     path("users/", include("apps.users.urls.user_urls", namespace="users")),
     path("artists/", include("apps.users.urls.artist_urls", namespace="artists")),
-    path("notifications/", include("apps.notifications.urls"))
+    path("notifications/", include("apps.notifications.urls")),
+    path("favorites/", include("apps.favorites.urls"))
 ]
