@@ -1,11 +1,14 @@
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets
+from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
 from apps.artworks.filters import ArtworkFilter
 from apps.artworks.models import Artwork, StatusTextChoices
-from apps.artworks.serializers import ArtworkListSerializer, ArtworkCreateSerializer
+from apps.artworks.serializers import (
+    ArtworkListSerializer,
+    ArtworkDetailSerializer,
+)
 
 
 class ArtworkPagination(PageNumberPagination):
@@ -27,23 +30,22 @@ class ArtworkPagination(PageNumberPagination):
         )
 
 
-class ArtworkViewSet(viewsets.ModelViewSet):
-    queryset = Artwork.objects.all()
+class ArtworkListView(generics.ListAPIView):
     serializer_class = ArtworkListSerializer
     pagination_class = ArtworkPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = ArtworkFilter
 
-    def get_serializer_class(self):
-        if self.action == "create":
-            return ArtworkCreateSerializer
-        return ArtworkListSerializer
-
     def get_queryset(self):
-        queryset = Artwork.objects.select_related("artist").order_by("id")
+        queryset = Artwork.objects.select_related("profile").order_by("id")
         status = self.request.query_params.get("status")
 
         if not status:
             return queryset.filter(status=StatusTextChoices.APPROVED)
 
         return queryset
+
+
+class ArtworkDetailView(generics.RetrieveAPIView):
+    queryset = Artwork.objects.select_related("profile").all()
+    serializer_class = ArtworkDetailSerializer
