@@ -65,6 +65,11 @@ class ArtworkDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ("image_width", "image_height")
 
 
+class ArtworkSearchSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ("title",)
+
+
 class ArtworkCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Artwork
