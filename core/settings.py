@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "django_filters",
     "apps.users",
     "apps.notifications",
+    "apps.favorites",
     "rest_framework_simplejwt",
 ]
 
